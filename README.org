@@ -1,0 +1,30 @@
+#+TITLE: Redis Dummy Data 생성
+
+spring boot application의 세션 서버를 Redis로 연결하여 더미데이터를 생성한다.
+
+
+* 서버구동 예시
+  첨부된 =redis-demo.jar= 를 아래와 같이 구동한다.
+
+  #+BEGIN_SRC sh
+  nohup java -jar -Dspring.session.timeout=60s -Dspring.redis.sentinel.nodes=10.20.200.102:32762,10.20.200.102:32423,10.20.200.102:30064 redis-demo.jar > redis-spring.log &
+  #+END_SRC
+
+* 서버호출 예시
+** 세션 데이터 자동 생성
+
+   자동으로 더미데이터 생성
+
+   #+BEGIN_SRC sh
+   for ((i=1;i<=1000;i++)); do curl localhost:8080/generate?dummySize=10; done
+   #+END_SRC
+** 실제 로그인 방식 세션 데이터 생성
+
+   | id    | pw       |
+   |-------+----------|
+   | admin | password |
+   | user1 | password |
+
+   #+BEGIN_SRC sh
+   curl -i -X POST -F "username=admin" -F "password=password" http://localhost:8080/login
+   #+END_SRC
